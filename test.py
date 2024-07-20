@@ -11,11 +11,20 @@ from CNN import *
 from DatasetLoaders import RoadSignDataset
 
 
+# transform = transforms.Compose([
+#     transforms.Resize((32, 32)),  # Resize images to 32x32
+#     transforms.ToTensor(),  # Convert PIL Image to Tensor
+#     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # Normalize to [-1, 1]
+# ])
+
 transform = transforms.Compose([
     transforms.Resize((32, 32)),  # Resize images to 32x32
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomCrop(32, padding=4),
     transforms.ToTensor(),  # Convert PIL Image to Tensor
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # Normalize to [-1, 1]
 ])
+
 
 dataset = RoadSignDataset(root_dir='images', annotations_dir='annotations', transform=transform)
 dataset.showClassStats()
@@ -31,10 +40,10 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# device = torch.device('cpu')
 
 # Initialize the model
-model = CNN_32x32().to(device)
-# model = CNN_300x400().to(device)
+model = CNN_32x32_orig().to(device)
 
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
@@ -47,6 +56,7 @@ num_epochs = 10
 total_step = len(train_loader)
 train_loss_data = np.zeros(num_epochs)
 test_loss_data = np.zeros(num_epochs)
+test_accuracy_data = np.zeros(num_epochs)
 
 for epoch in range(num_epochs):
     # Training loop
@@ -85,12 +95,12 @@ for epoch in range(num_epochs):
             correct += (predicted == labels).sum().item()
 
     test_loss_data[epoch] = test_loss / len(test_loader)
-    accuracy = 100 * correct / total
+    test_accuracy_data[epoch] = 100 * correct / total
 
     print(f'Epoch [{epoch+1}/{num_epochs}], '
           f'Train Loss: {train_loss_data[epoch]:.4f}, '
           f'Test Loss: {test_loss_data[epoch]:.4f}, '
-          f'Test Accuracy: {accuracy:.2f}%')
+          f'Test Accuracy: {test_accuracy_data[epoch]:.2f}%')
     
 dt = time.time() - time_start
 print(f'Training finished in {dt:.1f} seconds')
@@ -101,7 +111,17 @@ plt.plot(np.arange(num_epochs), train_loss_data, '-x', label='Training Loss')
 plt.plot(np.arange(num_epochs), test_loss_data, '-x', label='Testing Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
-plt.title(f'Training and Testing Loss over {num_epochs} Epochs')
+plt.title(f'Training and Testing Loss over {num_epochs} Epochs with {model.name}')
+plt.legend()
+plt.grid()
+# plt.show()
+
+# Plotting Testing Accuracy
+plt.figure()
+plt.plot(np.arange(num_epochs), test_accuracy_data, '-x', label='Testing Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title(f'Testing Accuracy over {num_epochs} Epochs with {model.name}')
 plt.legend()
 plt.grid()
 plt.show()

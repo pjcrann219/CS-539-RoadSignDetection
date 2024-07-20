@@ -16,7 +16,7 @@ class RoadSignDataset(Dataset):
         self.annotations_dir = annotations_dir
         self.transform = transform
         self.image_paths = [f for f in os.listdir(root_dir) if f.endswith('.png')]
-        self.label_map = {'stop': 0, 'speedlimit': 1, 'crosswalk': 2, 'trafficlight': 3}
+        self.label_map = {'stop': 0, 'speedlimit': 1, 'crosswalk': 2, 'trafficlight': 3, 'general-caution': 4}
         self.value_map = {v: k for k, v in self.label_map.items()}
         self.labels = self.load_labels()
 
@@ -53,7 +53,7 @@ class RoadSignDataset(Dataset):
         counts = list(label_counts.values())
 
         for label, count in zip(unique_labels, counts):
-            print(f"Label: {label}, Count: {count}")
+            print(f"Label: {self.value_map[label]} {label}, Count: {count}")
 
     def plotImage(self, i):
         image, label = self.__getitem__(i)
