@@ -12,7 +12,7 @@ To ensure safety and effectiveness, autonomous vehicles are ordered to obey the 
 # III. Methodology
 
 ## Model
-
+![Model Diagram](assets/Diagram2.png)
 ## Hyper Parameters
 
 # IV. Results
