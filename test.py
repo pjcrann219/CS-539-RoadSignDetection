@@ -2,20 +2,15 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
-import torchvision.datasets as datasets
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+from torchsummary import summary
 
 from CNN import *
 from DatasetLoaders import RoadSignDataset
-
-
-# transform = transforms.Compose([
-#     transforms.Resize((32, 32)),  # Resize images to 32x32
-#     transforms.ToTensor(),  # Convert PIL Image to Tensor
-#     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # Normalize to [-1, 1]
-# ])
 
 transform = transforms.Compose([
     transforms.Resize((32, 32)),  # Resize images to 32x32
@@ -45,6 +40,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # Initialize the model
 model = CNN_32x32_orig().to(device)
 
+summary(model, (3, 32, 32))
+
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -52,11 +49,12 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 # Training
 print(f"Model: {model.name}, Device: {device}, Batch Size: {batch_size}")
 time_start = time.time()
-num_epochs = 10
+num_epochs = 5
 total_step = len(train_loader)
 train_loss_data = np.zeros(num_epochs)
 test_loss_data = np.zeros(num_epochs)
 test_accuracy_data = np.zeros(num_epochs)
+confusion_matrices = []
 
 for epoch in range(num_epochs):
     # Training loop
@@ -81,6 +79,9 @@ for epoch in range(num_epochs):
     test_loss = 0.0
     correct = 0
     total = 0
+    all_labels = []
+    all_predictions = []
+
     with torch.no_grad():
         for images, labels in test_loader:
             images = images.to(device)
@@ -94,8 +95,15 @@ for epoch in range(num_epochs):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predicted.cpu().numpy())
+
     test_loss_data[epoch] = test_loss / len(test_loader)
     test_accuracy_data[epoch] = 100 * correct / total
+
+    # Compute confusion matrix
+    cm = confusion_matrix(all_labels, all_predictions)
+    confusion_matrices.append(cm)
 
     print(f'Epoch [{epoch+1}/{num_epochs}], '
           f'Train Loss: {train_loss_data[epoch]:.4f}, '
@@ -124,4 +132,20 @@ plt.ylabel('Loss')
 plt.title(f'Testing Accuracy over {num_epochs} Epochs with {model.name}')
 plt.legend()
 plt.grid()
+# plt.show()
+
+plt.figure(figsize=(10, 7))
+sns.heatmap(confusion_matrices[-1], annot=True, fmt='d', cmap='Blues')
+plt.title(f'Confusion Matrix over {num_epochs} Epochs with {model.name}')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
 plt.show()
+
+# # Plot confusion matricies for each epcoch:
+# for epoch, cm in enumerate(confusion_matrices, 1):
+#     plt.figure(figsize=(10, 7))
+#     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+#     plt.title(f'Confusion Matrix at Epoch {epoch}')
+#     plt.xlabel('Predicted')
+#     plt.ylabel('Actual')
+#     plt.show()

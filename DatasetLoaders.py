@@ -1,13 +1,9 @@
 import os
-import torch.nn as nn
-import torch.optim as optim
-from torchvision import transforms
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from PIL import Image
 import xml.etree.ElementTree as ET
 from collections import Counter
 import matplotlib.pyplot as plt
-from torchvision.transforms.functional import to_pil_image
 
 # Custom dataset class to load images and their corresponding labels
 class RoadSignDataset(Dataset):
@@ -43,7 +39,7 @@ class RoadSignDataset(Dataset):
     def extract_label_from_xml(self, xml_path):
         tree = ET.parse(xml_path)
         root = tree.getroot()
-        label = root.find('object/name').text  # Replace 'class' with your XML tag for class
+        label = root.find('object/name').text
         return label
 
     def showClassStats(self):
