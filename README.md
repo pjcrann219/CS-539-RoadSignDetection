@@ -8,6 +8,8 @@ To ensure safety and effectiveness, autonomous vehicles are ordered to obey the 
 
 # II. Dataset
 
+In this project we utilized the full Road Sign Detection Dataset from Kaggle https://www.kaggle.com/datasets/andrewmvd/road-sign-detection consisting of 4 classes of images of different road signs. Additionally we incorporated images from the GRSTB dataset which is a well known dataset for various German road sign images.
+
 
 # III. Methodology
 
