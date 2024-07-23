@@ -1,3 +1,7 @@
  MODEL INSTRUCTIONS
 
-To run our image classifier model run the "run_model.py" file which loads the primary road sign dataset and passes this data into our CNN
+To run our image classifier model run the "run_model.py" file which loads the primary road sign dataset and passes this data into our CNN. All models 
+experimented with throughout the course of this project reside in CNN.py
+
+If there are any additional images for the specified classes you wish to test, use script.py to specify the folder path and label for images you wish to
+generate corresponding XML files for
