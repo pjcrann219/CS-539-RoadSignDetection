@@ -49,4 +49,9 @@ This layer takes it's input of 256 and outputs 5 units. This is what was needed 
 
 ## Hyper Parameters
 
+##### Loss Function: Cross Entropy Loss
+##### Optimizer: Adam
+##### Learning Rate: 0.001
+##### Number of Epochs: 15
+
 # IV. Results
