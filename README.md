@@ -68,4 +68,9 @@ When looking at the confusion matricies for our model, it was clear that the mod
 ![image](https://github.com/user-attachments/assets/e8a9a02e-3eb5-4b9d-99b3-372df8fcf71a)
 
 
+# V. How to Run
+To begin training the model, you'll use the script train_model.py. By default, this script employs the CNN_32x32 architecture as defined in CNN.py. If desired, you have the flexibility to select alternative architectures such as CNN_32x32_orig or CNN_300x400. Within train_model.py, you can also fine-tune hyperparameters such as learning rate, number of epochs, and more.
 
+Upon completion of training, the optimized weights of the model will be saved automatically as 'final_model.pth'. These weights represent the culmination of the training process and can be easily utilized for future inference tasks.
+
+To apply the trained model to examples, use run_model.py.
