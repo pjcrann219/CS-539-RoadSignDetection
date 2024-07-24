@@ -10,7 +10,6 @@ To ensure safety and effectiveness, autonomous vehicles are ordered to obey the 
 
 In this project we utilized the full Road Sign Detection Dataset from Kaggle https://www.kaggle.com/datasets/andrewmvd/road-sign-detection consisting of 4 classes of images of different road signs. Additionally we incorporated images from the GRSTB dataset which is a well known dataset for various German road sign images. This diverse dataset consists of 43 different classes, however we selected 4 of which were consistent with the classes of our other dataset to compare the performance. The classes of sign we used were stop signs, general caution signs, crosswalk signs, traffic lights, and speedlimit signs. 
 
-
 # III. Methodology
 
 ## Model Architecture
@@ -55,3 +54,18 @@ This layer takes it's input of 256 and outputs 5 units. This is what was needed 
 ##### Number of Epochs: 15
 
 # IV. Results
+
+Overall, our model showed promising results with an above 90% accuracy across the testing data
+
+![image](https://github.com/user-attachments/assets/d13b83bc-da32-49c2-bd65-da17cfffb77b)
+
+Testing loss and training loss were also very similar around 0.2 for the final few epochs. This means that the model was able to avoid overfitting the data.
+
+![image](https://github.com/user-attachments/assets/e64e37e5-7ab3-46ea-a67c-801f98ed40c2)
+
+When looking at the confusion matricies for our model, it was clear that the model was quite accurate on all classes but one. The class of '3' representing traffic lights was very low with an accuracy of 33% in the final epoch. We estimate that this is because this class has the smallest amount of training data with only 52 instances used for training.
+
+![image](https://github.com/user-attachments/assets/e8a9a02e-3eb5-4b9d-99b3-372df8fcf71a)
+
+
+
